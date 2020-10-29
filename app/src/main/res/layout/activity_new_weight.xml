@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.newweight.NewWeightActivity">
+
+    <CalendarView
+        android:id="@+id/calendar_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:id="@+id/edit_weight"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/big_padding"
+        android:ems="10"
+        android:fontFamily="sans-serif-light"
+        android:hint="@string/hint_weight"
+        android:inputType="number"
+        android:minHeight="@dimen/min_height"
+        android:textSize="18sp"
+        android:layout_marginTop="2dp"
+        android:importantForAutofill="no" />
+
+    <Button
+        android:id="@+id/button_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/big_padding"
+        android:background="@color/colorPrimary"
+        android:text="@string/button_save"
+        android:textColor="@color/buttonLabel"
+        android:layout_marginTop="2dp" />
+</LinearLayout>

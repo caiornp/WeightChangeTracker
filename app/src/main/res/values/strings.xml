@@ -6,6 +6,7 @@
 
     <string name="action_settings">Settings</string>
     <string name="hint_weight">Weight…</string>
+    <string name="hint_date">Date…</string>
     <string name="button_save">Save</string>
     <string name="empty_not_saved">Weight not saved because it is empty.</string>
     <string name="add_weight">Add weight</string>
