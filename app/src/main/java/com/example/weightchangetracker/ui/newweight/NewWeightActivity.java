@@ -34,12 +34,12 @@ public class NewWeightActivity extends AppCompatActivity {
 
         final Button button = findViewById(R.id.button_save);
 
-        selectedDate = 0;
+        Calendar cal = Calendar. getInstance();
+        selectedDate = cal.getTimeInMillis();
 
         button.setOnClickListener(view -> {
             Intent replyIntent = new Intent();
-            if (TextUtils.isEmpty(mEditWeightView.getText()) ||
-                    (selectedDate == 0)) {
+            if (TextUtils.isEmpty(mEditWeightView.getText())) {
                 setResult(RESULT_CANCELED, replyIntent);
             } else {
                 Float weightValue = Float.parseFloat(mEditWeightView.getText().toString());

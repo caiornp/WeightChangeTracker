@@ -11,7 +11,6 @@ import androidx.sqlite.db.SupportSQLiteDatabase;
 
 import com.example.weightchangetracker.util.DateConverters;
 
-import java.util.Calendar;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -50,28 +49,25 @@ public abstract class WeightRegistryDatabase extends RoomDatabase {
                 // Populate the database in the background.
                 // If you want to start with more words, just add them.
                 WeightRegistryDao dao = INSTANCE.weightRegistryDao();
-                dao.deleteAll();
+                
+                //dao.deleteAll();
 
-                Calendar cal = Calendar.getInstance();
-                cal.set(2020, 10, 23);
-                WeightRegistry weight = new WeightRegistry(cal.getTime(),(float)88.9);
-                dao.insert(weight);
+                //Calendar cal = Calendar.getInstance();
+                //cal.set(2020, 9, 26);
+                //WeightRegistry weight = new WeightRegistry(cal.getTime(),88.8f);
+                //dao.insert(weight);
 
-                cal.set(2020, 10, 24);
-                weight = new WeightRegistry(cal.getTime(), (float) 88.6);
-                dao.insert(weight);
+                //cal.set(2020, 9, 27);
+                //weight = new WeightRegistry(cal.getTime(), 88f);
+                //dao.insert(weight);
 
-                cal.set(2020, 10, 25);
-                weight = new WeightRegistry(cal.getTime(),(float) 88.1);
-                dao.insert(weight);
+                //cal.set(2020, 9, 28);
+                //weight = new WeightRegistry(cal.getTime(),88.3f);
+                //dao.insert(weight);
 
-                cal.set(2020, 10, 26);
-                weight = new WeightRegistry(cal.getTime(),(float) 88.8);
-                dao.insert(weight);
-
-                cal.set(2020, 10, 27);
-                weight = new WeightRegistry(cal.getTime(),(float) 88.0);
-                dao.insert(weight);
+                //cal.set(2020, 9, 29);
+                //weight = new WeightRegistry(cal.getTime(),88f);
+                //dao.insert(weight);
             });
         }
     };

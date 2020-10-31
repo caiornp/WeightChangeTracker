@@ -1,6 +1,7 @@
 package com.example.weightchangetracker.ui.dashboard;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,15 +14,34 @@ import com.example.weightchangetracker.R;
 import com.example.weightchangetracker.models.WeightRegistry;
 import com.example.weightchangetracker.ui.home.WeightListAdapter;
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import static android.graphics.Color.rgb;
+
+
 
 public class DashboardFragment extends Fragment {
 
     private DashboardViewModel dashboardViewModel;
     private WeightListAdapter mWeighListAdapter;
     private View mRoot;
+
+    private static final String TAG = "DashboardFragment";
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -48,15 +68,120 @@ public class DashboardFragment extends Fragment {
     }
 
     void updateGraph() {
-        LineDataSet dataSet = new LineDataSet(dashboardViewModel.getWeightList(), "Weight"); // add entries to dataset
-        dataSet.setColor(0xff0000ff);
-        dataSet.setValueTextColor(0xff0000ff); // styling, ...
+        LineDataSet dataSet = new LineDataSet(dashboardViewModel.getWeightList(), "Real Weight"); // add entries to dataset
+        dataSet.setColor(rgb(0, 0, 255));
+        dataSet.setValueTextColor(rgb(0, 0, 255)); // styling, ...
+        dataSet.setCircleColor(rgb(0, 0, 255));
+        dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        dataSet.setLineWidth(4f);
 
-        LineData lineData = new LineData(dataSet);
+        // ----------------
+
+        Calendar cal = Calendar.getInstance();
+
+        // Set end date
+        cal.set(2020, 11, 25);
+        Date endDate = cal.getTime();
+
+        // Set start date
+        cal.set(2020, 9, 26);
+        Date startDate = cal.getTime();
+
+        float maxChangeRate = 1f - ((0.5f / 100f) / 7);
+        float minChangeRate = 1f - ((1f / 100f)   / 7);
+        float startWeight = 88.8f;
+
+        List maxRateList = new ArrayList();
+        List minRateList = new ArrayList();
+
+        long totalDays = (endDate.getTime() - startDate.getTime()) / (1000*60*60*24);
+
+        float cMinWeight = startWeight;
+        float cMaxWeight = startWeight;
+        for(long i = 0; i <totalDays; ++i) {
+            Date d = cal.getTime();
+
+            Entry maxE = new Entry(d.getTime(), cMaxWeight);
+            maxRateList.add(maxE);
+
+            Entry minE = new Entry(d.getTime(), cMinWeight);
+            minRateList.add(minE);
+
+            Log.v(TAG, "Max: " + cMaxWeight + " Min: " + cMinWeight);
+
+            cal.add(Calendar.DAY_OF_MONTH, 1);
+            cMaxWeight = cMaxWeight * maxChangeRate;
+            cMinWeight = cMinWeight * minChangeRate;
+        }
+
+
+        LineDataSet maxWeightDataSet = new LineDataSet(maxRateList, "Max Weight"); // add entries to dataset
+        maxWeightDataSet.setColor(rgb(0, 255, 0));
+        maxWeightDataSet.setValueTextColor(rgb(0, 255, 0)); // styling, ...
+        maxWeightDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        maxWeightDataSet.setDrawCircles(false);
+        maxWeightDataSet.setLineWidth(2f);
+
+        //---
+
+        LineDataSet minWeightDataSet = new LineDataSet(minRateList, "Min Weight"); // add entries to dataset
+        minWeightDataSet.setColor(rgb(255, 0, 0));
+        minWeightDataSet.setValueTextColor(rgb(255, 0, 0)); // styling, ...
+        minWeightDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        minWeightDataSet.setDrawCircles(false);
+        minWeightDataSet.setLineWidth(2f);
+
+        //---
+
+        // use the interface ILineDataSet
+        List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        dataSets.add(dataSet);
+        dataSets.add(maxWeightDataSet);
+        dataSets.add(minWeightDataSet);
+
+        LineData lineData = new LineData(dataSets);
 
         // in this example, a LineChart is initialized from xml
         LineChart chart = (LineChart) mRoot.findViewById(R.id.chart);
         chart.setData(lineData);
+
+        ValueFormatter formatter = new ValueFormatter() {
+            @Override
+            public String getAxisLabel(float value, AxisBase axis) {
+                Date date = new Date((long)value);
+                DateFormat dateFormat = new SimpleDateFormat("dd/MM");
+                String strDate = dateFormat.format(date);
+
+                return strDate;
+            }
+        };
+
+        XAxis x = chart.getXAxis();
+
+        x.setAxisMinimum(startDate.getTime());
+        x.setAxisMaximum(endDate.getTime());
+
+        x.setGranularity(1f); // minimum axis-step (interval) is 1
+        x.setLabelCount(7);
+        x.setValueFormatter(formatter);
+
+        YAxis y = chart.getAxisLeft();
+        y.setAxisMinimum(80f);
+        y.setAxisMaximum(90f);
+        y.setLabelCount(12);
+
+        YAxis y2 = chart.getAxisRight();
+        y2.setEnabled(false);
+
+        chart.setTouchEnabled(true);
+
+        Description description = new Description();
+        description.setText("Weight change and tendency");
+
+        chart.setDescription(description);
+
+        chart.zoom(2.0f, 1, 0, startWeight);
+
         chart.invalidate(); // refresh
     }
 }

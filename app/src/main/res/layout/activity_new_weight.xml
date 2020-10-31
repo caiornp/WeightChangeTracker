@@ -16,14 +16,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/big_padding"
+        android:layout_marginTop="2dp"
         android:ems="10"
         android:fontFamily="sans-serif-light"
+        android:inputType="numberDecimal"
         android:hint="@string/hint_weight"
-        android:inputType="number"
+        android:importantForAutofill="no"
         android:minHeight="@dimen/min_height"
-        android:textSize="18sp"
-        android:layout_marginTop="2dp"
-        android:importantForAutofill="no" />
+        android:textSize="18sp" />
 
     <Button
         android:id="@+id/button_save"
