@@ -15,6 +15,7 @@ public class WeightRegistry {
     public Date date;
 
     @ColumnInfo(name = "weight")
+    @NonNull
     public float weight;
 
     public WeightRegistry(Date date, float weight)
@@ -22,13 +23,6 @@ public class WeightRegistry {
         this.date = new Date(date.getTime());
         this.weight = weight;
     }
-
-    /*public WeightRegistry(float weight)
-    {
-        this.date = new Date(System.currentTimeMillis());
-        this.weight = weight;
-    }
-     */
 
     public float getWeight() {return this.weight;}
 

@@ -12,8 +12,8 @@ import java.util.List;
 
 public class HomeViewModel extends AndroidViewModel {
 
-        private WeightRegistryRepository mRepository;
-        private LiveData<List<WeightRegistry>> mAllWeightRegistries;
+        private final WeightRegistryRepository mRepository;
+        private final LiveData<List<WeightRegistry>> mAllWeightRegistries;
 
         public HomeViewModel (Application application) {
                 super(application);
@@ -26,4 +26,6 @@ public class HomeViewModel extends AndroidViewModel {
         }
 
         public void insert(WeightRegistry weight) { mRepository.insert(weight); }
+
+        //public void update() { mAllWeightRegistries = mRepository.getAllWeightRegistries(); }
 }

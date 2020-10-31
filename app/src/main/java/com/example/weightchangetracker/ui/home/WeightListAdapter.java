@@ -1,5 +1,6 @@
 package com.example.weightchangetracker.ui.home;
 
+import android.content.res.Resources;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.weightchangetracker.R;
 import com.example.weightchangetracker.models.WeightRegistry;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.List;
 
 public class WeightListAdapter extends RecyclerView.Adapter<WeightListAdapter.WeightViewHolder> {
@@ -29,29 +31,35 @@ public class WeightListAdapter extends RecyclerView.Adapter<WeightListAdapter.We
     }
 
     private List<WeightRegistry> mWeights;
+    private ViewGroup mParent;
 
     @Override
     @NonNull
     public WeightViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext()).inflate(
                 R.layout.recyclerview_item, parent, false);
+        mParent = parent;
         return new WeightViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(WeightViewHolder holder, int position) {
+    public void onBindViewHolder(@NotNull WeightViewHolder holder, int position) {
         if (mWeights != null) {
             WeightRegistry current = mWeights.get(position);
 
-            DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            //String strDate = dateFormat.format(current.getDate());
             String strDate = DateFormat.getDateInstance().format(current.getDate());
 
             holder.dateItemView.setText(strDate);
-            holder.weightItemView.setText(String.valueOf(current.getWeight()) + " kg ");
+
+            Resources res = mParent.getResources();
+
+            String str = res.getString(R.string.weight_display, current.getWeight(),
+                    res.getString(R.string.weight_unit));
+
+            holder.weightItemView.setText(str);
         } else {
             // Covers the case of data not being ready yet.
-            holder.weightItemView.setText("No Weight");
+            holder.weightItemView.setText(R.string.no_weight);
         }
     }
 

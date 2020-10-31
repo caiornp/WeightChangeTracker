@@ -10,4 +10,7 @@
     <string name="button_save">Save</string>
     <string name="empty_not_saved">Weight not saved because it is empty.</string>
     <string name="add_weight">Add weight</string>
+    <string name="no_weight">No weights</string>
+    <string name="weight_unit">kg</string>
+    <string name="weight_display">%1$.1f %2$s</string>
 </resources>

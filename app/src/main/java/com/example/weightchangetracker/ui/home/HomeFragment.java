@@ -68,13 +68,19 @@ public class HomeFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == NEW_WEIGHT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-
-            Calendar cal = Calendar.getInstance();
-
             Date date = new Date(data.getLongExtra(NewWeightActivity.DATE_REPLY, 0));
-            Float weightValue = data.getFloatExtra(NewWeightActivity.WEIGHT_REPLY, 0);
 
-            WeightRegistry weight = new WeightRegistry(date, weightValue);
+            // Normalize the date by removing the hour, minute, second and millisecond to make searching easier
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            cal.set(Calendar.HOUR_OF_DAY, 0);
+            cal.set(Calendar.MINUTE, 0);
+            cal.set(Calendar.SECOND, 0);
+            cal.set(Calendar.MILLISECOND, 0);
+
+            float weightValue = data.getFloatExtra(NewWeightActivity.WEIGHT_REPLY, 0);
+
+            WeightRegistry weight = new WeightRegistry(cal.getTime(), weightValue);
             homeViewModel.insert(weight);
         } else {
             Toast.makeText(

@@ -4,24 +4,29 @@
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    card_view:cardElevation="8dp"
-    android:layout_margin="3dp">
+    android:layout_height="52dp"
+    card_view:cardElevation="1dp"
+    android:layout_margin="1dp"
+    android:paddingBottom="6dp"
+    android:paddingTop="6dp"
+    android:paddingStart="8dp">
         <RelativeLayout
-            android:layout_marginStart="10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical">
+
             <TextView
                 android:id="@+id/textViewDate"
                 style="@style/date_title"
                 android:layout_height="wrap_content"
-                />
+                android:layout_gravity="center_vertical" />
             <TextView
                 android:id="@+id/textViewWeight"
                 android:layout_height="wrap_content"
                 style="@style/weight_title"
-                android:layout_marginTop="2dp"
+                android:layout_marginStart="32dp"
                 android:layout_alignEnd="@+id/textViewDate"
+                android:layout_gravity="center_vertical"
                 />
         </RelativeLayout>
 
