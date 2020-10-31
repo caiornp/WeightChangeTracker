@@ -9,7 +9,8 @@
     android:layout_margin="1dp"
     android:paddingBottom="6dp"
     android:paddingTop="6dp"
-    android:paddingStart="8dp">
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp">
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -24,7 +25,6 @@
                 android:id="@+id/textViewWeight"
                 android:layout_height="wrap_content"
                 style="@style/weight_title"
-                android:layout_marginStart="32dp"
                 android:layout_alignEnd="@+id/textViewDate"
                 android:layout_gravity="center_vertical"
                 />
