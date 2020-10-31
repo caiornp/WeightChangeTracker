@@ -19,7 +19,7 @@ import java.util.List;
 
 public class WeightListAdapter extends RecyclerView.Adapter<WeightListAdapter.WeightViewHolder> {
 
-    public class WeightViewHolder extends RecyclerView.ViewHolder {
+    public static class WeightViewHolder extends RecyclerView.ViewHolder {
         private final TextView weightItemView;
         private final TextView dateItemView;
 

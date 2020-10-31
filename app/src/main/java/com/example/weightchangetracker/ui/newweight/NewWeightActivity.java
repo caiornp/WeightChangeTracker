@@ -19,7 +19,6 @@ public class NewWeightActivity extends AppCompatActivity {
     public static final String WEIGHT_REPLY = "com.example.weightchangetracker.REPLY_WEIGHT";
     public static final String DATE_REPLY = "com.example.weightchangetracker.REPLY_DATE";
 
-    private CalendarView mDateView;
     private EditText mEditWeightView;
 
     private long selectedDate;
@@ -29,7 +28,7 @@ public class NewWeightActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_weight);
 
-        mDateView = findViewById(R.id.calendar_date);
+        CalendarView mDateView = findViewById(R.id.calendar_date);
         mEditWeightView = findViewById(R.id.edit_weight);
 
         final Button button = findViewById(R.id.button_save);
@@ -51,14 +50,11 @@ public class NewWeightActivity extends AppCompatActivity {
             finish();
         });
 
-        mDateView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
-            @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                // display the selected date by using a toast
-                Calendar cal = Calendar. getInstance();
-                cal.set(year, month, dayOfMonth);
-                selectedDate = cal.getTimeInMillis();
-            }
+        mDateView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
+            // display the selected date by using a toast
+            Calendar cal1 = Calendar. getInstance();
+            cal1.set(year, month, dayOfMonth);
+            selectedDate = cal1.getTimeInMillis();
         });
     }
 }

@@ -50,7 +50,7 @@ public class DashboardFragment extends Fragment {
         mRoot = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         // in this example, a LineChart is initialized from xml
-        LineChart chart = (LineChart) mRoot.findViewById(R.id.chart);
+        LineChart chart = mRoot.findViewById(R.id.chart);
 
         dashboardViewModel.getAllWeights().observe(getViewLifecycleOwner(), weights -> {
             dashboardViewModel.clearWeights();
@@ -134,7 +134,7 @@ public class DashboardFragment extends Fragment {
         //---
 
         // use the interface ILineDataSet
-        List<ILineDataSet> dataSets = new ArrayList<ILineDataSet>();
+        List<ILineDataSet> dataSets = new ArrayList<>();
         dataSets.add(dataSet);
         dataSets.add(maxWeightDataSet);
         dataSets.add(minWeightDataSet);
@@ -142,7 +142,7 @@ public class DashboardFragment extends Fragment {
         LineData lineData = new LineData(dataSets);
 
         // in this example, a LineChart is initialized from xml
-        LineChart chart = (LineChart) mRoot.findViewById(R.id.chart);
+        LineChart chart = mRoot.findViewById(R.id.chart);
         chart.setData(lineData);
 
         ValueFormatter formatter = new ValueFormatter() {
@@ -150,9 +150,8 @@ public class DashboardFragment extends Fragment {
             public String getAxisLabel(float value, AxisBase axis) {
                 Date date = new Date((long)value);
                 DateFormat dateFormat = new SimpleDateFormat("dd/MM");
-                String strDate = dateFormat.format(date);
 
-                return strDate;
+                return dateFormat.format(date);
             }
         };
 

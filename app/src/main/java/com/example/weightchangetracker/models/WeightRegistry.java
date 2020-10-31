@@ -12,11 +12,10 @@ public class WeightRegistry {
     @PrimaryKey
     @NonNull
     @ColumnInfo(name = "date")
-    public Date date;
+    public final Date date;
 
     @ColumnInfo(name = "weight")
-    @NonNull
-    public float weight;
+    public final float weight;
 
     public WeightRegistry(Date date, float weight)
     {

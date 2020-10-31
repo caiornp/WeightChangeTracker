@@ -16,13 +16,12 @@ public class DashboardViewModel extends AndroidViewModel {
 
     private List<Entry> mWeightList;
 
-    private WeightRegistryRepository mRepository;
-    private LiveData<List<WeightRegistry>> mAllWeightRegistries;
+    private final LiveData<List<WeightRegistry>> mAllWeightRegistries;
 
     public DashboardViewModel(Application application) {
         super(application);
         mWeightList = new ArrayList<>();
-        mRepository = new WeightRegistryRepository(application);
+        WeightRegistryRepository mRepository = new WeightRegistryRepository(application);
         mAllWeightRegistries = mRepository.getAllWeightRegistries();
     }
 

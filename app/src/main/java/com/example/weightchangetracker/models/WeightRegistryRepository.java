@@ -7,8 +7,8 @@ import androidx.lifecycle.LiveData;
 import java.util.List;
 
 public class WeightRegistryRepository {
-    private WeightRegistryDao mWeightRegistryDao;
-    private LiveData<List<WeightRegistry>> mAllWeightRegistries;
+    private final WeightRegistryDao mWeightRegistryDao;
+    private final LiveData<List<WeightRegistry>> mAllWeightRegistries;
 
     public WeightRegistryRepository(Application application) {
         WeightRegistryDatabase db = WeightRegistryDatabase.getDatabase(application);
@@ -21,8 +21,6 @@ public class WeightRegistryRepository {
     }
 
     public void insert(WeightRegistry weight) {
-        WeightRegistryDatabase.databaseWriteExecutor.execute(() -> {
-            mWeightRegistryDao.insert(weight);
-        });
+        WeightRegistryDatabase.databaseWriteExecutor.execute(() -> mWeightRegistryDao.insert(weight));
     }
 }
