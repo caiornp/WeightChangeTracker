@@ -13,13 +13,18 @@
     <string name="no_weight">No weights</string>
     <string name="weight_unit">kg</string>
     <string name="weight_display">%1$.1f %2$s</string>
-    <string name="calendar_start_caption">Start date:</string>
-    <string name="calendar_end_caption">End date:</string>
+
+    <string name="calendar_start_year_caption">Diet start year:</string>
+    <string name="calendar_start_month_caption">Diet start month:</string>
+    <string name="calendar_start_day_caption">Diet start day:</string>
+
+    <string name="calendar_end_year_caption">Diet end year:</string>
+    <string name="calendar_end_month_caption">Diet end month:</string>
+    <string name="calendar_end_day_caption">Diet end day:</string>
 
     <string name="max_rate_change">Max weekly rate (%)</string>
     <string name="min_rate_change">Min weekly rate (%)</string>
     <string name="min_change_caption">Min weekly rate (%)</string>
     <string name="max_change_caption">Max weekly rate (%)</string>
-    <string name="default_min_rate_value">0.5</string>
-    <string name="default_max_rate_value">1</string>
+
 </resources>

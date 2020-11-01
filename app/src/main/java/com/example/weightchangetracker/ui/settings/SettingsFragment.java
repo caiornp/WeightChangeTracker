@@ -1,25 +1,43 @@
 package com.example.weightchangetracker.ui.settings;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.text.InputType;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.EditTextPreference;
+import androidx.preference.PreferenceFragmentCompat;
 
 import com.example.weightchangetracker.R;
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends PreferenceFragmentCompat {
 
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             ViewGroup container, Bundle savedInstanceState) {
-        SettingsViewModel settingsViewModel = new ViewModelProvider(this).get(SettingsViewModel.class);
-        View root = inflater.inflate(R.layout.fragment_settings, container, false);
+    @Override
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.fragment_settings, rootKey);
 
+        EditTextPreference startDatePreference = findPreference("calendar_diet_start_date");
 
+        if (startDatePreference != null) {
+            startDatePreference.setOnBindEditTextListener(
+                    new EditTextPreference.OnBindEditTextListener() {
+                        @Override
+                        public void onBindEditText(@NonNull EditText editText) {
+                            editText.setInputType(InputType.TYPE_CLASS_DATETIME);
+                        }
+                    });
+        }
 
-        return root;
+        EditTextPreference endDatePreference = findPreference("calendar_diet_end_date");
+
+        if (endDatePreference != null) {
+            endDatePreference.setOnBindEditTextListener(
+                    new EditTextPreference.OnBindEditTextListener() {
+                        @Override
+                        public void onBindEditText(@NonNull EditText editText) {
+                            editText.setInputType(InputType.TYPE_CLASS_DATETIME);
+                        }
+                    });
+        }
     }
 }

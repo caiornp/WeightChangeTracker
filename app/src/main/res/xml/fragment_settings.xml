@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+        <EditTextPreference
+            app:key="calendar_diet_start_year"
+            app:useSimpleSummaryProvider="true"
+            app:title="@string/calendar_start_year_caption"
+            />
+
+        <EditTextPreference
+            app:key="calendar_diet_start_month"
+            app:useSimpleSummaryProvider="true"
+            app:title="@string/calendar_start_month_caption"
+            />
+
+        <EditTextPreference
+            app:key="calendar_diet_start_day"
+            app:useSimpleSummaryProvider="true"
+            app:title="@string/calendar_start_day_caption"
+            />
+
+        <EditTextPreference
+            app:key="calendar_diet_end_year"
+            app:useSimpleSummaryProvider="true"
+            app:title="@string/calendar_end_year_caption"
+            />
+
+        <EditTextPreference
+            app:key="calendar_diet_end_month"
+            app:useSimpleSummaryProvider="true"
+            app:title="@string/calendar_end_month_caption"
+            />
+
+        <EditTextPreference
+            app:key="calendar_diet_end_day"
+            app:useSimpleSummaryProvider="true"
+            app:title="@string/calendar_end_day_caption"
+            />
+
+        <EditTextPreference
+            app:key="min_change_rate"
+            app:title="@string/min_change_caption"
+            app:useSimpleSummaryProvider="true"
+            />
+
+        <EditTextPreference
+            app:key="max_change_rate"
+            app:title="@string/max_change_caption"
+            app:useSimpleSummaryProvider="true"
+            />
+
+
+
+</PreferenceScreen>
+

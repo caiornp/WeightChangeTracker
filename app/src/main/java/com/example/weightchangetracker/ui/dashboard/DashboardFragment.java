@@ -1,5 +1,6 @@
 package com.example.weightchangetracker.ui.dashboard;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.preference.PreferenceManager;
 
 import com.example.weightchangetracker.R;
 import com.example.weightchangetracker.models.WeightRegistry;
@@ -30,6 +32,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static android.graphics.Color.rgb;
 
@@ -77,18 +80,28 @@ public class DashboardFragment extends Fragment {
 
         // ----------------
 
+        SharedPreferences sharedPreferences =
+                PreferenceManager.getDefaultSharedPreferences(this.getContext());
+
         Calendar cal = Calendar.getInstance();
 
         // Set end date
-        cal.set(2020, 11, 25);
+        cal.set(Integer.parseInt(sharedPreferences.getString("calendar_diet_end_year", "0")),
+                Integer.parseInt(sharedPreferences.getString("calendar_diet_end_month", "0"))-1,
+                Integer.parseInt(sharedPreferences.getString("calendar_diet_end_day", "0")));
         Date endDate = cal.getTime();
 
         // Set start date
-        cal.set(2020, 9, 26);
+        cal.set(Integer.parseInt(sharedPreferences.getString("calendar_diet_start_year", "0")),
+                Integer.parseInt(sharedPreferences.getString("calendar_diet_start_month", "0"))-1,
+                Integer.parseInt(sharedPreferences.getString("calendar_diet_start_day", "0")));
         Date startDate = cal.getTime();
 
-        float maxChangeRate = 1f - ((0.5f / 100f) / 7);
-        float minChangeRate = 1f - ((1f / 100f)   / 7);
+        float maxWeekRate = Float.parseFloat(sharedPreferences.getString("max_change_rate", "0"));
+        float minWeekRate = Float.parseFloat(sharedPreferences.getString("min_change_rate", "0"));
+
+        float maxChangeRate = 1 - ((maxWeekRate / 100) / 7);
+        float minChangeRate = 1 - ((minWeekRate / 100) / 7);
         float startWeight = 88.8f;
 
         List maxRateList = new ArrayList();
@@ -149,7 +162,7 @@ public class DashboardFragment extends Fragment {
             @Override
             public String getAxisLabel(float value, AxisBase axis) {
                 Date date = new Date((long)value);
-                DateFormat dateFormat = new SimpleDateFormat("dd/MM");
+                DateFormat dateFormat = new SimpleDateFormat("dd/MM", Locale.getDefault());
 
                 return dateFormat.format(date);
             }
