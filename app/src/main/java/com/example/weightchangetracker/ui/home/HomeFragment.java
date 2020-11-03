@@ -1,6 +1,7 @@
 package com.example.weightchangetracker.ui.home;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,8 +9,10 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,6 +20,7 @@ import com.example.weightchangetracker.R;
 import com.example.weightchangetracker.models.WeightRegistry;
 import com.example.weightchangetracker.ui.newweight.NewWeightActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -28,6 +32,8 @@ public class HomeFragment extends Fragment {
 
     private HomeViewModel homeViewModel;
     private WeightListAdapter mWeighListAdapter;
+    private RecyclerView mRecyclerView;
+    CoordinatorLayout mCoordinatorLayout;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -36,19 +42,15 @@ public class HomeFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        //final TextView textView = root.findViewById(R.id.text_home);
-        //homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
-        //    @Override
-        //    public void onChanged(@Nullable String s) {
-        //        textView.setText(s);
-        //    }
-        //})
+        mCoordinatorLayout = root.findViewById(R.id.coordinatorLayout);
 
         mWeighListAdapter = new WeightListAdapter();
 
-        RecyclerView recyclerView = root.findViewById(R.id.recyclerview);
-        recyclerView.setAdapter(mWeighListAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+        mRecyclerView = root.findViewById(R.id.recyclerview);
+        mRecyclerView.setAdapter(mWeighListAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
+        enableSwipeToDeleteAndUndo();
 
         homeViewModel.getAllWeights().observe(getViewLifecycleOwner(), weights -> {
             // Update the cached copy of the words in the adapter.
@@ -62,6 +64,39 @@ public class HomeFragment extends Fragment {
         });
 
         return root;
+    }
+
+    private void enableSwipeToDeleteAndUndo() {
+        SwipeToDeleteCallback swipeToDeleteCallback = new SwipeToDeleteCallback(this.getContext()) {
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
+                final int position = viewHolder.getAdapterPosition();
+                final WeightRegistry item = mWeighListAdapter.getData().get(position);
+
+                mWeighListAdapter.removeItem(position);
+
+                homeViewModel.delete(item);
+
+                Snackbar snackbar = Snackbar
+                        .make(mCoordinatorLayout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
+                snackbar.setAction("UNDO", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        mWeighListAdapter.restoreItem(item, position);
+                        homeViewModel.insert(item);
+                        mRecyclerView.scrollToPosition(position);
+                    }
+                });
+
+                snackbar.setActionTextColor(Color.YELLOW);
+                snackbar.show();
+
+            }
+        };
+
+        ItemTouchHelper itemTouchhelper = new ItemTouchHelper(swipeToDeleteCallback);
+        itemTouchhelper.attachToRecyclerView(mRecyclerView);
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

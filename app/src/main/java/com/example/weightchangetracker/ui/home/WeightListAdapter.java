@@ -77,4 +77,18 @@ public class WeightListAdapter extends RecyclerView.Adapter<WeightListAdapter.We
         else return 0;
     }
 
+    public void removeItem(int position) {
+        mWeights.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void restoreItem(WeightRegistry item, int position) {
+        mWeights.add(position, item);
+        notifyItemInserted(position);
+    }
+
+    public List<WeightRegistry> getData() {
+        return mWeights;
+    }
+
 }

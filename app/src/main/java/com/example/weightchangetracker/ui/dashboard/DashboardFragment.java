@@ -53,7 +53,7 @@ public class DashboardFragment extends Fragment {
         mRoot = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
         // in this example, a LineChart is initialized from xml
-        LineChart chart = mRoot.findViewById(R.id.chart);
+        //mRoot.findViewById(R.id.chart);
 
         dashboardViewModel.getAllWeights().observe(getViewLifecycleOwner(), weights -> {
             dashboardViewModel.clearWeights();

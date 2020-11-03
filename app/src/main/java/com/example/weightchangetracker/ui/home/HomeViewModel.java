@@ -27,5 +27,9 @@ public class HomeViewModel extends AndroidViewModel {
 
         public void insert(WeightRegistry weight) { mRepository.insert(weight); }
 
+        public void delete(WeightRegistry weight) {
+                mRepository.delete(weight);
+        }
+
         //public void update() { mAllWeightRegistries = mRepository.getAllWeightRegistries(); }
 }

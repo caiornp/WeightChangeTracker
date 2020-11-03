@@ -13,7 +13,7 @@ import java.util.List;
 @Dao
 public interface WeightRegistryDao {
     @Query("SELECT * FROM weight_registry")
-    LiveData<List<WeightRegistry>> getAll();
+    LiveData<List<WeightRegistry>>getAll();
 
     @Query("SELECT * FROM weight_registry WHERE date = :date ORDER BY date ASC")
     List<WeightRegistry> findByDate(Date date);

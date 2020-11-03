@@ -23,4 +23,8 @@ public class WeightRegistryRepository {
     public void insert(WeightRegistry weight) {
         WeightRegistryDatabase.databaseWriteExecutor.execute(() -> mWeightRegistryDao.insert(weight));
     }
+
+    public void delete(WeightRegistry weight) {
+        WeightRegistryDatabase.databaseWriteExecutor.execute(() -> mWeightRegistryDao.delete(weight));
+    }
 }
