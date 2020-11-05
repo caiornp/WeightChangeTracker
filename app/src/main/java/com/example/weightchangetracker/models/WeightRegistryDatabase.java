@@ -43,32 +43,15 @@ public abstract class WeightRegistryDatabase extends RoomDatabase {
         public void onOpen(@NonNull SupportSQLiteDatabase db) {
             super.onOpen(db);
 
+            /*
             // If you want to keep data through app restarts,
             // comment out the following block
             databaseWriteExecutor.execute(() -> {
                 // Populate the database in the background.
                 // If you want to start with more words, just add them.
                 WeightRegistryDao dao = INSTANCE.weightRegistryDao();
-                
-                //dao.deleteAll();
-
-                //Calendar cal = Calendar.getInstance();
-                //cal.set(2020, 9, 26);
-                //WeightRegistry weight = new WeightRegistry(cal.getTime(),88.8f);
-                //dao.insert(weight);
-
-                //cal.set(2020, 9, 27);
-                //weight = new WeightRegistry(cal.getTime(), 88f);
-                //dao.insert(weight);
-
-                //cal.set(2020, 9, 28);
-                //weight = new WeightRegistry(cal.getTime(),88.3f);
-                //dao.insert(weight);
-
-                //cal.set(2020, 9, 29);
-                //weight = new WeightRegistry(cal.getTime(),88f);
-                //dao.insert(weight);
             });
+             */
         }
     };
 }

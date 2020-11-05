@@ -1,39 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen
-    xmlns:app="http://schemas.android.com/apk/res-auto" >
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
         <EditTextPreference
             app:key="calendar_diet_start_year"
             app:useSimpleSummaryProvider="true"
+            android:inputType="number"
             app:title="@string/calendar_start_year_caption"
             />
 
         <EditTextPreference
             app:key="calendar_diet_start_month"
             app:useSimpleSummaryProvider="true"
+            android:inputType="number"
             app:title="@string/calendar_start_month_caption"
             />
 
         <EditTextPreference
             app:key="calendar_diet_start_day"
             app:useSimpleSummaryProvider="true"
+            android:inputType="number"
             app:title="@string/calendar_start_day_caption"
             />
 
         <EditTextPreference
             app:key="calendar_diet_end_year"
             app:useSimpleSummaryProvider="true"
+            android:inputType="number"
             app:title="@string/calendar_end_year_caption"
             />
 
         <EditTextPreference
             app:key="calendar_diet_end_month"
             app:useSimpleSummaryProvider="true"
+            android:inputType="number"
             app:title="@string/calendar_end_month_caption"
             />
 
         <EditTextPreference
             app:key="calendar_diet_end_day"
             app:useSimpleSummaryProvider="true"
+            android:inputType="number"
             app:title="@string/calendar_end_day_caption"
             />
 
@@ -41,12 +47,14 @@
             app:key="min_change_rate"
             app:title="@string/min_change_caption"
             app:useSimpleSummaryProvider="true"
+            android:inputType="numberDecimal"
             />
 
         <EditTextPreference
             app:key="max_change_rate"
             app:title="@string/max_change_caption"
             app:useSimpleSummaryProvider="true"
+            android:inputType="numberDecimal"
             />
 
 

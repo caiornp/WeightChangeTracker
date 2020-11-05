@@ -1,20 +1,21 @@
 package com.example.weightchangetracker.ui.dashboard;
 
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.preference.PreferenceManager;
 
 import com.example.weightchangetracker.R;
 import com.example.weightchangetracker.models.WeightRegistry;
-import com.example.weightchangetracker.ui.home.WeightListAdapter;
+import com.example.weightchangetracker.util.DateConverters;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
@@ -26,39 +27,34 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import static android.graphics.Color.rgb;
-
+import static java.time.temporal.ChronoUnit.DAYS;
 
 
 public class DashboardFragment extends Fragment {
 
     private DashboardViewModel dashboardViewModel;
-    private WeightListAdapter mWeighListAdapter;
     private View mRoot;
+    private LineDataSet mMainDataSet;
+    private float mStartWeight;
 
-    private static final String TAG = "DashboardFragment";
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         dashboardViewModel =
                 new ViewModelProvider(this).get(DashboardViewModel.class);
         mRoot = inflater.inflate(R.layout.fragment_dashboard, container, false);
 
-        // in this example, a LineChart is initialized from xml
-        //mRoot.findViewById(R.id.chart);
+        mStartWeight = 90f;
 
         dashboardViewModel.getAllWeights().observe(getViewLifecycleOwner(), weights -> {
             dashboardViewModel.clearWeights();
             for(WeightRegistry w : weights) {
-                Entry entry = new Entry(w.getDate().getTime(), w.getWeight());
+                Entry entry = new Entry(DateConverters.dateToFloat(w.getDate()), w.getWeight());
                 dashboardViewModel.addWeight(entry);
             }
 
@@ -70,88 +66,8 @@ public class DashboardFragment extends Fragment {
         return mRoot;
     }
 
-    void updateGraph() {
-        LineDataSet dataSet = new LineDataSet(dashboardViewModel.getWeightList(), "Real Weight"); // add entries to dataset
-        dataSet.setColor(rgb(0, 0, 255));
-        dataSet.setValueTextColor(rgb(0, 0, 255)); // styling, ...
-        dataSet.setCircleColor(rgb(0, 0, 255));
-        dataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-        dataSet.setLineWidth(4f);
-
-        // ----------------
-
-        SharedPreferences sharedPreferences =
-                PreferenceManager.getDefaultSharedPreferences(this.getContext());
-
-        Calendar cal = Calendar.getInstance();
-
-        // Set end date
-        cal.set(Integer.parseInt(sharedPreferences.getString("calendar_diet_end_year", "0")),
-                Integer.parseInt(sharedPreferences.getString("calendar_diet_end_month", "0"))-1,
-                Integer.parseInt(sharedPreferences.getString("calendar_diet_end_day", "0")));
-        Date endDate = cal.getTime();
-
-        // Set start date
-        cal.set(Integer.parseInt(sharedPreferences.getString("calendar_diet_start_year", "0")),
-                Integer.parseInt(sharedPreferences.getString("calendar_diet_start_month", "0"))-1,
-                Integer.parseInt(sharedPreferences.getString("calendar_diet_start_day", "0")));
-        Date startDate = cal.getTime();
-
-        float maxWeekRate = Float.parseFloat(sharedPreferences.getString("max_change_rate", "0"));
-        float minWeekRate = Float.parseFloat(sharedPreferences.getString("min_change_rate", "0"));
-
-        float maxChangeRate = 1 - ((maxWeekRate / 100) / 7);
-        float minChangeRate = 1 - ((minWeekRate / 100) / 7);
-        float startWeight = 88.8f;
-
-        List maxRateList = new ArrayList();
-        List minRateList = new ArrayList();
-
-        long totalDays = (endDate.getTime() - startDate.getTime()) / (1000*60*60*24);
-
-        float cMinWeight = startWeight;
-        float cMaxWeight = startWeight;
-        for(long i = 0; i <totalDays; ++i) {
-            Date d = cal.getTime();
-
-            Entry maxE = new Entry(d.getTime(), cMaxWeight);
-            maxRateList.add(maxE);
-
-            Entry minE = new Entry(d.getTime(), cMinWeight);
-            minRateList.add(minE);
-
-            Log.v(TAG, "Max: " + cMaxWeight + " Min: " + cMinWeight);
-
-            cal.add(Calendar.DAY_OF_MONTH, 1);
-            cMaxWeight = cMaxWeight * maxChangeRate;
-            cMinWeight = cMinWeight * minChangeRate;
-        }
-
-
-        LineDataSet maxWeightDataSet = new LineDataSet(maxRateList, "Max Weight"); // add entries to dataset
-        maxWeightDataSet.setColor(rgb(0, 255, 0));
-        maxWeightDataSet.setValueTextColor(rgb(0, 255, 0)); // styling, ...
-        maxWeightDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-        maxWeightDataSet.setDrawCircles(false);
-        maxWeightDataSet.setLineWidth(2f);
-
-        //---
-
-        LineDataSet minWeightDataSet = new LineDataSet(minRateList, "Min Weight"); // add entries to dataset
-        minWeightDataSet.setColor(rgb(255, 0, 0));
-        minWeightDataSet.setValueTextColor(rgb(255, 0, 0)); // styling, ...
-        minWeightDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
-        minWeightDataSet.setDrawCircles(false);
-        minWeightDataSet.setLineWidth(2f);
-
-        //---
-
-        // use the interface ILineDataSet
-        List<ILineDataSet> dataSets = new ArrayList<>();
-        dataSets.add(dataSet);
-        dataSets.add(maxWeightDataSet);
-        dataSets.add(minWeightDataSet);
-
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private void drawGraph(List<ILineDataSet> dataSets, OffsetDateTime startDate, OffsetDateTime endDate) {
         LineData lineData = new LineData(dataSets);
 
         // in this example, a LineChart is initialized from xml
@@ -161,25 +77,22 @@ public class DashboardFragment extends Fragment {
         ValueFormatter formatter = new ValueFormatter() {
             @Override
             public String getAxisLabel(float value, AxisBase axis) {
-                Date date = new Date((long)value);
-                DateFormat dateFormat = new SimpleDateFormat("dd/MM", Locale.getDefault());
-
-                return dateFormat.format(date);
+                return DateConverters.floatToStringShort(value);
             }
         };
 
         XAxis x = chart.getXAxis();
 
-        x.setAxisMinimum(startDate.getTime());
-        x.setAxisMaximum(endDate.getTime());
+        x.setAxisMinimum(DateConverters.dateToFloat(startDate));
+        x.setAxisMaximum(DateConverters.dateToFloat(endDate));
 
         x.setGranularity(1f); // minimum axis-step (interval) is 1
         x.setLabelCount(7);
         x.setValueFormatter(formatter);
 
         YAxis y = chart.getAxisLeft();
-        y.setAxisMinimum(80f);
-        y.setAxisMaximum(90f);
+        y.setAxisMinimum(mStartWeight-10f);
+        y.setAxisMaximum(mStartWeight+10f);
         y.setLabelCount(12);
 
         YAxis y2 = chart.getAxisRight();
@@ -192,8 +105,116 @@ public class DashboardFragment extends Fragment {
 
         chart.setDescription(description);
 
-        chart.zoom(2.0f, 1, 0, startWeight);
+        chart.zoom(2.0f, 1, 0, mStartWeight);
 
         chart.invalidate(); // refresh
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private ArrayList<Entry> createLine(OffsetDateTime startDate, OffsetDateTime endDate, float startWeight, float weekRate) {
+        float changeRate = 1 - ((weekRate / 100) / 7);
+        ArrayList<Entry> rateList = new ArrayList<>();
+
+        long totalDays = DAYS.between(startDate, endDate);
+
+        float currWeight = startWeight;
+        OffsetDateTime currDate = startDate;
+
+        for(long i = 0; i <totalDays; ++i) {
+            Entry entry = new Entry(DateConverters.dateToFloat(currDate), currWeight);
+            rateList.add(entry);
+            currDate = currDate.plusDays(1);
+            currWeight = currWeight * changeRate;
+        }
+
+        return rateList;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    void updateGraph() {
+        mMainDataSet = new LineDataSet(dashboardViewModel.getWeightList(), "Real Weight"); // add entries to dataset
+        mMainDataSet.setColor(rgb(0, 0, 255));
+        mMainDataSet.setValueTextColor(rgb(0, 0, 255)); // styling, ...
+        mMainDataSet.setCircleColor(rgb(0, 0, 255));
+        mMainDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+        mMainDataSet.setLineWidth(4f);
+
+        // ----------------
+
+        if(this.getContext() != null) {
+            SharedPreferences sharedPreferences =
+                    PreferenceManager.getDefaultSharedPreferences(this.getContext());
+
+            int calendar_diet_end_year =
+                    Integer.parseInt(sharedPreferences.getString("calendar_diet_end_year", "0"));
+            int calendar_diet_end_month =
+                    Integer.parseInt(sharedPreferences.getString("calendar_diet_end_month", "0"));
+            int calendar_diet_end_day =
+                    Integer.parseInt(sharedPreferences.getString("calendar_diet_end_day", "0"));
+
+            int calendar_diet_start_year =
+                    Integer.parseInt(sharedPreferences.getString("calendar_diet_start_year", "0"));
+            int calendar_diet_start_month =
+                    Integer.parseInt(sharedPreferences.getString("calendar_diet_start_month", "0"));
+            int calendar_diet_start_day =
+                    Integer.parseInt(sharedPreferences.getString("calendar_diet_start_day", "0"));
+
+            float maxWeekRate = Float.parseFloat(sharedPreferences.getString("max_change_rate", "0"));
+            float minWeekRate = Float.parseFloat(sharedPreferences.getString("min_change_rate", "0"));
+
+            if ((calendar_diet_end_year > 0) && (calendar_diet_end_month > 0) && (calendar_diet_end_day > 0)
+                    && (calendar_diet_start_year > 0) && (calendar_diet_start_month > 0) && (calendar_diet_start_day > 0)
+                    && (maxWeekRate > 0) && (minWeekRate > 0)) {
+                // Set end date
+                OffsetDateTime endDate = DateConverters.fromDayMonthYear(calendar_diet_end_year,
+                        calendar_diet_end_month,
+                        calendar_diet_end_day);
+
+                OffsetDateTime startDate = DateConverters.fromDayMonthYear(calendar_diet_start_year,
+                        calendar_diet_start_month,
+                        calendar_diet_start_day);
+
+                dashboardViewModel.findByDate(startDate).observe(getViewLifecycleOwner(), startWeights -> {
+                    if (!startWeights.isEmpty()) {
+                        mStartWeight = startWeights.get(0).getWeight();
+                    }
+
+                    List<Entry> maxRateList = createLine(startDate, endDate, mStartWeight, maxWeekRate);
+                    LineDataSet maxWeightDataSet = new LineDataSet(maxRateList, "Max Weight"); // add entries to dataset
+                    maxWeightDataSet.setColor(rgb(0, 255, 0));
+                    maxWeightDataSet.setValueTextColor(rgb(0, 255, 0)); // styling, ...
+                    maxWeightDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+                    maxWeightDataSet.setDrawCircles(false);
+                    maxWeightDataSet.setLineWidth(2f);
+
+                    //---
+
+                    List<Entry> minRateList = createLine(startDate, endDate, mStartWeight, minWeekRate);
+                    LineDataSet minWeightDataSet = new LineDataSet(minRateList, "Min Weight"); // add entries to dataset
+                    minWeightDataSet.setColor(rgb(255, 0, 0));
+                    minWeightDataSet.setValueTextColor(rgb(255, 0, 0)); // styling, ...
+                    minWeightDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+                    minWeightDataSet.setDrawCircles(false);
+                    minWeightDataSet.setLineWidth(2f);
+
+                    /*
+                     * TODO:
+                     *   - Create a average line
+                     * */
+
+                    // use the interface ILineDataSet
+                    List<ILineDataSet> dataSets = new ArrayList<>();
+                    dataSets.add(mMainDataSet);
+                    dataSets.add(maxWeightDataSet);
+                    dataSets.add(minWeightDataSet);
+
+                    drawGraph(dataSets, startDate, endDate);
+                });
+            }
+        }
+
+        List<ILineDataSet> dataSets = new ArrayList<>();
+        dataSets.add(mMainDataSet);
+        drawGraph(dataSets, OffsetDateTime.now(), OffsetDateTime.now().plusMonths(1));
     }
 }

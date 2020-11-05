@@ -4,6 +4,7 @@ import android.app.Application;
 
 import androidx.lifecycle.LiveData;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 public class WeightRegistryRepository {
@@ -26,5 +27,9 @@ public class WeightRegistryRepository {
 
     public void delete(WeightRegistry weight) {
         WeightRegistryDatabase.databaseWriteExecutor.execute(() -> mWeightRegistryDao.delete(weight));
+    }
+
+    public LiveData<List<WeightRegistry>> findByDate(OffsetDateTime date) {
+        return mWeightRegistryDao.findByDate(date);
     }
 }

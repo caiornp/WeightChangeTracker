@@ -2,6 +2,7 @@ package com.example.weightchangetracker.ui.home;
 
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,7 +10,8 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
+import androidx.annotation.RequiresApi;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.ItemTouchHelper;
@@ -19,11 +21,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.weightchangetracker.R;
 import com.example.weightchangetracker.models.WeightRegistry;
 import com.example.weightchangetracker.ui.newweight.NewWeightActivity;
+import com.example.weightchangetracker.util.DateConverters;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 
-import java.util.Calendar;
-import java.util.Date;
+import java.time.OffsetDateTime;
 
 import static android.app.Activity.RESULT_OK;
 
@@ -33,7 +35,7 @@ public class HomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private WeightListAdapter mWeighListAdapter;
     private RecyclerView mRecyclerView;
-    CoordinatorLayout mCoordinatorLayout;
+    ConstraintLayout mHomeLayout;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -42,7 +44,7 @@ public class HomeFragment extends Fragment {
 
         View root = inflater.inflate(R.layout.fragment_home, container, false);
 
-        mCoordinatorLayout = root.findViewById(R.id.coordinatorLayout);
+        mHomeLayout = root.findViewById(R.id.homeLayout);
 
         mWeighListAdapter = new WeightListAdapter();
 
@@ -78,15 +80,12 @@ public class HomeFragment extends Fragment {
                 homeViewModel.delete(item);
 
                 Snackbar snackbar = Snackbar
-                        .make(mCoordinatorLayout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
-                snackbar.setAction("UNDO", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
+                        .make(mHomeLayout, "Item was removed from the list.", Snackbar.LENGTH_LONG);
+                snackbar.setAction("UNDO", view -> {
 
-                        mWeighListAdapter.restoreItem(item, position);
-                        homeViewModel.insert(item);
-                        mRecyclerView.scrollToPosition(position);
-                    }
+                    mWeighListAdapter.restoreItem(item, position);
+                    homeViewModel.insert(item);
+                    mRecyclerView.scrollToPosition(position);
                 });
 
                 snackbar.setActionTextColor(Color.YELLOW);
@@ -99,23 +98,16 @@ public class HomeFragment extends Fragment {
         itemTouchhelper.attachToRecyclerView(mRecyclerView);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
         if (requestCode == NEW_WEIGHT_ACTIVITY_REQUEST_CODE && resultCode == RESULT_OK) {
-            Date date = new Date(data.getLongExtra(NewWeightActivity.DATE_REPLY, 0));
-
-            // Normalize the date by removing the hour, minute, second and millisecond to make searching easier
-            Calendar cal = Calendar.getInstance();
-            cal.setTime(date);
-            cal.set(Calendar.HOUR_OF_DAY, 0);
-            cal.set(Calendar.MINUTE, 0);
-            cal.set(Calendar.SECOND, 0);
-            cal.set(Calendar.MILLISECOND, 0);
+            OffsetDateTime date = DateConverters.fromTimestamp(data.getStringExtra(NewWeightActivity.DATE_REPLY));
 
             float weightValue = data.getFloatExtra(NewWeightActivity.WEIGHT_REPLY, 0);
 
-            WeightRegistry weight = new WeightRegistry(cal.getTime(), weightValue);
+            WeightRegistry weight = new WeightRegistry(date, weightValue);
             homeViewModel.insert(weight);
         } else {
             Toast.makeText(

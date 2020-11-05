@@ -18,23 +18,28 @@ import com.example.weightchangetracker.R;
 
 abstract public class SwipeToDeleteCallback extends ItemTouchHelper.Callback {
 
-    Context mContext;
-    private Paint mClearPaint;
-    private ColorDrawable mBackground;
-    private int backgroundColor;
-    private Drawable deleteDrawable;
-    private int intrinsicWidth;
-    private int intrinsicHeight;
+    private final Paint mClearPaint;
+    private final ColorDrawable mBackground;
+    private final int backgroundColor;
+    private final Drawable deleteDrawable;
+    private final int intrinsicWidth;
+    private final int intrinsicHeight;
 
     SwipeToDeleteCallback(Context context) {
-        mContext = context;
         mBackground = new ColorDrawable();
         backgroundColor = R.attr.colorAccent;
         mClearPaint = new Paint();
         mClearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
-        deleteDrawable = ContextCompat.getDrawable(mContext, R.drawable.ic_baseline_delete_24);
-        intrinsicWidth = deleteDrawable.getIntrinsicWidth();
-        intrinsicHeight = deleteDrawable.getIntrinsicHeight();
+        deleteDrawable = ContextCompat.getDrawable(context, R.drawable.ic_baseline_delete_24);
+
+        if(deleteDrawable != null) {
+            intrinsicWidth = deleteDrawable.getIntrinsicWidth();
+            intrinsicHeight = deleteDrawable.getIntrinsicHeight();
+        }
+        else {
+            intrinsicWidth = 0;
+            intrinsicHeight = 0;
+        }
     }
 
     @Override

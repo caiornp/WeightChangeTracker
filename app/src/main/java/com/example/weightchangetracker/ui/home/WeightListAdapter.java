@@ -1,20 +1,22 @@
 package com.example.weightchangetracker.ui.home;
 
 import android.content.res.Resources;
+import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weightchangetracker.R;
 import com.example.weightchangetracker.models.WeightRegistry;
+import com.example.weightchangetracker.util.DateConverters;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.text.DateFormat;
 import java.util.List;
 
 public class WeightListAdapter extends RecyclerView.Adapter<WeightListAdapter.WeightViewHolder> {
@@ -42,12 +44,13 @@ public class WeightListAdapter extends RecyclerView.Adapter<WeightListAdapter.We
         return new WeightViewHolder(itemView);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onBindViewHolder(@NotNull WeightViewHolder holder, int position) {
         if (mWeights != null) {
             WeightRegistry current = mWeights.get(position);
 
-            String strDate = DateFormat.getDateInstance().format(current.getDate());
+            String strDate = DateConverters.dateToStringDayMonthYear(current.getDate());
 
             holder.dateItemView.setText(strDate);
 

@@ -26,5 +26,7 @@
     <string name="min_rate_change">Min weekly rate (%)</string>
     <string name="min_change_caption">Min weekly rate (%)</string>
     <string name="max_change_caption">Max weekly rate (%)</string>
+    <string name="include_Weight_text">Include weight</string>
+
 
 </resources>

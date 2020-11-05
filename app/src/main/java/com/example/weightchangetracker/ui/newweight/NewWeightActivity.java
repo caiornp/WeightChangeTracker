@@ -1,17 +1,20 @@
 package com.example.weightchangetracker.ui.newweight;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.Button;
 import android.widget.CalendarView;
 import android.widget.EditText;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.weightchangetracker.R;
+import com.example.weightchangetracker.util.DateConverters;
 
-import java.util.Calendar;
+import java.time.OffsetDateTime;
 
 public class NewWeightActivity extends AppCompatActivity {
 
@@ -21,8 +24,9 @@ public class NewWeightActivity extends AppCompatActivity {
 
     private EditText mEditWeightView;
 
-    private long selectedDate;
+    private String selectedDate;
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,8 +37,7 @@ public class NewWeightActivity extends AppCompatActivity {
 
         final Button button = findViewById(R.id.button_save);
 
-        Calendar cal = Calendar. getInstance();
-        selectedDate = cal.getTimeInMillis();
+        selectedDate = DateConverters.dateToTimestamp(OffsetDateTime.now());
 
         button.setOnClickListener(view -> {
             Intent replyIntent = new Intent();
@@ -52,9 +55,7 @@ public class NewWeightActivity extends AppCompatActivity {
 
         mDateView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
             // display the selected date by using a toast
-            Calendar cal1 = Calendar. getInstance();
-            cal1.set(year, month, dayOfMonth);
-            selectedDate = cal1.getTimeInMillis();
+            selectedDate = DateConverters.dateToTimestamp(DateConverters.fromDayMonthYear(year, month, dayOfMonth));
         });
     }
 }

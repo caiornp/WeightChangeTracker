@@ -5,26 +5,28 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-import java.util.Date;
+import org.jetbrains.annotations.NotNull;
+
+import java.time.OffsetDateTime;
 
 @Entity(tableName = "weight_registry")
 public class WeightRegistry {
     @PrimaryKey
     @NonNull
-    @ColumnInfo(name = "date")
-    public final Date date;
+    @ColumnInfo(name = "input_date")
+    public final OffsetDateTime date;
 
     @ColumnInfo(name = "weight")
     public final float weight;
 
-    public WeightRegistry(Date date, float weight)
+    public WeightRegistry(@NotNull OffsetDateTime date, float weight)
     {
-        this.date = new Date(date.getTime());
+        this.date = date;
         this.weight = weight;
     }
 
     public float getWeight() {return this.weight;}
 
     @NonNull
-    public Date getDate() { return this.date; }
+    public OffsetDateTime getDate() { return this.date; }
 }
