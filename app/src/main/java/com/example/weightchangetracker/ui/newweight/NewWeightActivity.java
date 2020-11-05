@@ -55,7 +55,7 @@ public class NewWeightActivity extends AppCompatActivity {
 
         mDateView.setOnDateChangeListener((view, year, month, dayOfMonth) -> {
             // display the selected date by using a toast
-            selectedDate = DateConverters.dateToTimestamp(DateConverters.fromDayMonthYear(year, month, dayOfMonth));
+            selectedDate = DateConverters.dateToTimestamp(DateConverters.fromDayMonthYear(year, (month+1), dayOfMonth));
         });
     }
 }

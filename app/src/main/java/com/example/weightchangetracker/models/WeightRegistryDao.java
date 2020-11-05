@@ -15,7 +15,7 @@ public interface WeightRegistryDao {
     @Query("SELECT * FROM weight_registry")
     LiveData<List<WeightRegistry>>getAll();
 
-    @Query("SELECT * FROM weight_registry WHERE input_date = :date ORDER BY input_date ASC")
+    @Query("SELECT * FROM weight_registry WHERE  strftime('%Y-%m-%d', input_date, 'localtime') = strftime('%Y-%m-%d', :date, 'localtime') ORDER BY input_date ASC")
     LiveData<List<WeightRegistry>> findByDate(OffsetDateTime date);
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)

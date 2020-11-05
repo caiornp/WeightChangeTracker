@@ -1,8 +1,11 @@
 package com.example.weightchangetracker.ui.dashboard;
 
 import android.content.SharedPreferences;
+import android.content.res.Resources;
+import android.content.res.TypedArray;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,6 +44,7 @@ public class DashboardFragment extends Fragment {
     private View mRoot;
     private LineDataSet mMainDataSet;
     private float mStartWeight;
+    private int mPrimaryColor;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -60,6 +64,14 @@ public class DashboardFragment extends Fragment {
 
             updateGraph();
         });
+
+        TypedValue typedValue = new TypedValue();
+        Resources.Theme theme = getActivity().getTheme();
+        theme.resolveAttribute(android.R.attr.textColorPrimary, typedValue, true);
+        TypedArray arr =
+                getActivity().obtainStyledAttributes(typedValue.data, new int[]{
+                        android.R.attr.textColorPrimary});
+        mPrimaryColor = arr.getColor(0, -1);
 
         updateGraph();
 
@@ -86,26 +98,37 @@ public class DashboardFragment extends Fragment {
         x.setAxisMinimum(DateConverters.dateToFloat(startDate));
         x.setAxisMaximum(DateConverters.dateToFloat(endDate));
 
+
+
         x.setGranularity(1f); // minimum axis-step (interval) is 1
-        x.setLabelCount(7);
+        x.setLabelCount(8);
         x.setValueFormatter(formatter);
+        x.setTextColor(mPrimaryColor);
 
         YAxis y = chart.getAxisLeft();
-        y.setAxisMinimum(mStartWeight-10f);
-        y.setAxisMaximum(mStartWeight+10f);
+        y.setAxisMinimum(mStartWeight-7f);
+        y.setAxisMaximum(mStartWeight+2f);
         y.setLabelCount(12);
+        y.setTextColor(mPrimaryColor);
 
         YAxis y2 = chart.getAxisRight();
         y2.setEnabled(false);
 
         chart.setTouchEnabled(true);
+        chart.setDragEnabled(true);
+        chart.setScaleEnabled(true);
+
+        chart.getAxisRight().setEnabled(false);
 
         Description description = new Description();
         description.setText("Weight change and tendency");
 
         chart.setDescription(description);
 
-        chart.zoom(2.0f, 1, 0, mStartWeight);
+        chart.getLegend().setTextColor(mPrimaryColor);
+
+        chart.resetZoom();
+        //chart.zoom(0.9f, 1, 0, mStartWeight);
 
         chart.invalidate(); // refresh
     }
@@ -180,22 +203,24 @@ public class DashboardFragment extends Fragment {
                     }
 
                     List<Entry> maxRateList = createLine(startDate, endDate, mStartWeight, maxWeekRate);
-                    LineDataSet maxWeightDataSet = new LineDataSet(maxRateList, "Max Weight"); // add entries to dataset
+                    LineDataSet maxWeightDataSet = new LineDataSet(maxRateList, "Max change"); // add entries to dataset
                     maxWeightDataSet.setColor(rgb(0, 255, 0));
                     maxWeightDataSet.setValueTextColor(rgb(0, 255, 0)); // styling, ...
                     maxWeightDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
                     maxWeightDataSet.setDrawCircles(false);
                     maxWeightDataSet.setLineWidth(2f);
+                    maxWeightDataSet.setDrawValues(false);
 
                     //---
 
                     List<Entry> minRateList = createLine(startDate, endDate, mStartWeight, minWeekRate);
-                    LineDataSet minWeightDataSet = new LineDataSet(minRateList, "Min Weight"); // add entries to dataset
+                    LineDataSet minWeightDataSet = new LineDataSet(minRateList, "Min change"); // add entries to dataset
                     minWeightDataSet.setColor(rgb(255, 0, 0));
                     minWeightDataSet.setValueTextColor(rgb(255, 0, 0)); // styling, ...
                     minWeightDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
                     minWeightDataSet.setDrawCircles(false);
                     minWeightDataSet.setLineWidth(2f);
+                    minWeightDataSet.setDrawValues(false);
 
                     /*
                      * TODO:
