@@ -154,6 +154,23 @@ public class DashboardFragment extends Fragment {
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
+    private ArrayList<Entry> createTendency(List<Entry> data, int days) {
+        ArrayList<Entry> tendency = new ArrayList<>();
+        for(int i=0; i<data.size(); i++) {
+            float avg = 0;
+            float c = 0;
+            for(int j=i;(j>=0) && (j>=(i-days)); j--) {
+                avg = avg + data.get(j).getY();
+                c = c + 1f;
+            }
+            avg = avg / c;
+            Entry entry = new Entry(data.get(i).getX(), avg);
+            tendency.add(entry);
+        }
+        return tendency;
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     void updateGraph() {
         mMainDataSet = new LineDataSet(dashboardViewModel.getWeightList(), "Real Weight"); // add entries to dataset
         mMainDataSet.setColor(rgb(0, 0, 255));
@@ -222,16 +239,23 @@ public class DashboardFragment extends Fragment {
                     minWeightDataSet.setLineWidth(2f);
                     minWeightDataSet.setDrawValues(false);
 
-                    /*
-                     * TODO:
-                     *   - Create a average line
-                     * */
+                    //----
+
+                    List<Entry> tendencyList = createTendency(dashboardViewModel.getWeightList(), 7);
+                    LineDataSet tendencyDataSet = new LineDataSet(tendencyList, "Tendency"); // add entries to dataset
+                    tendencyDataSet.setColor(rgb(253, 106, 2));
+                    tendencyDataSet.setValueTextColor(rgb(253, 106, 2)); // styling, ...
+                    tendencyDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
+                    tendencyDataSet.setDrawCircles(false);
+                    tendencyDataSet.setLineWidth(2f);
+                    tendencyDataSet.setDrawValues(false);
 
                     // use the interface ILineDataSet
                     List<ILineDataSet> dataSets = new ArrayList<>();
                     dataSets.add(mMainDataSet);
                     dataSets.add(maxWeightDataSet);
                     dataSets.add(minWeightDataSet);
+                    dataSets.add(tendencyDataSet);
 
                     drawGraph(dataSets, startDate, endDate);
                 });

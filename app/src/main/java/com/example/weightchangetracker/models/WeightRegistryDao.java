@@ -12,7 +12,7 @@ import java.util.List;
 
 @Dao
 public interface WeightRegistryDao {
-    @Query("SELECT * FROM weight_registry")
+    @Query("SELECT * FROM weight_registry ORDER BY input_date ASC")
     LiveData<List<WeightRegistry>>getAll();
 
     @Query("SELECT * FROM weight_registry WHERE  strftime('%Y-%m-%d', input_date, 'localtime') = strftime('%Y-%m-%d', :date, 'localtime') ORDER BY input_date ASC")
