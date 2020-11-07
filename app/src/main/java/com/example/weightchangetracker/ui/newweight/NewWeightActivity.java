@@ -32,6 +32,12 @@ public class NewWeightActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_weight);
 
+        /**
+         * TODO:
+         * - Set maximum date to today
+         * - Validate weight
+         */
+
         CalendarView mDateView = findViewById(R.id.calendar_date);
         mEditWeightView = findViewById(R.id.edit_weight);
 

@@ -1,63 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android">
-        <EditTextPreference
-            app:key="calendar_diet_start_year"
-            app:useSimpleSummaryProvider="true"
-            android:inputType="number"
-            app:title="@string/calendar_start_year_caption"
-            />
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+        <PreferenceCategory
+            app:key="lines_category"
+            app:title="Which lines to display"
+            app:iconSpaceReserved="false"
+            android:fitsSystemWindows="true"
+            >
+                <SwitchPreferenceCompat
+                    app:key="switch_max_rate"
+                    app:iconSpaceReserved="false"
+                    app:defaultValue="true"
+                    app:title="Max change rate" />
+                <SwitchPreferenceCompat
+                    app:key="switch_min_rate"
+                    app:iconSpaceReserved="false"
+                    app:defaultValue="true"
+                    app:title="Min change rate" />
+                <SwitchPreferenceCompat
+                    app:key="switch_tendency"
+                    app:iconSpaceReserved="false"
+                    app:defaultValue="true"
+                    app:title="Tendency line" />
+        </PreferenceCategory>
 
-        <EditTextPreference
-            app:key="calendar_diet_start_month"
-            app:useSimpleSummaryProvider="true"
-            android:inputType="number"
-            app:title="@string/calendar_start_month_caption"
-            />
-
-        <EditTextPreference
-            app:key="calendar_diet_start_day"
-            app:useSimpleSummaryProvider="true"
-            android:inputType="number"
-            app:title="@string/calendar_start_day_caption"
-            />
-
-        <EditTextPreference
-            app:key="calendar_diet_end_year"
-            app:useSimpleSummaryProvider="true"
-            android:inputType="number"
-            app:title="@string/calendar_end_year_caption"
-            />
-
-        <EditTextPreference
-            app:key="calendar_diet_end_month"
-            app:useSimpleSummaryProvider="true"
-            android:inputType="number"
-            app:title="@string/calendar_end_month_caption"
-            />
-
-        <EditTextPreference
-            app:key="calendar_diet_end_day"
-            app:useSimpleSummaryProvider="true"
-            android:inputType="number"
-            app:title="@string/calendar_end_day_caption"
-            />
-
-        <EditTextPreference
-            app:key="min_change_rate"
-            app:title="@string/min_change_caption"
-            app:useSimpleSummaryProvider="true"
-            android:inputType="numberDecimal"
-            />
-
-        <EditTextPreference
-            app:key="max_change_rate"
-            app:title="@string/max_change_caption"
-            app:useSimpleSummaryProvider="true"
-            android:inputType="numberDecimal"
-            />
+        <PreferenceCategory
+            app:key="diet_start_category"
+            android:fitsSystemWindows="true"
+            app:iconSpaceReserved="false"
+            app:title="Diet start">
 
 
+                <EditTextPreference
+                    android:inputType="number"
+                    app:iconSpaceReserved="false"
+                    app:key="calendar_diet_start_year"
+                    app:title="@string/calendar_start_year_caption"
+                    app:useSimpleSummaryProvider="true" />
 
+                <EditTextPreference
+                    android:inputType="number"
+                    app:iconSpaceReserved="false"
+                    app:key="calendar_diet_start_month"
+                    app:title="@string/calendar_start_month_caption"
+                    app:useSimpleSummaryProvider="true" />
+
+                <EditTextPreference
+                    android:inputType="number"
+                    app:iconSpaceReserved="false"
+                    app:key="calendar_diet_start_day"
+                    app:title="@string/calendar_start_day_caption"
+                    app:useSimpleSummaryProvider="true" />
+        </PreferenceCategory>
+
+        <PreferenceCategory
+            app:key="diet_end_category"
+            app:iconSpaceReserved="false"
+            android:fitsSystemWindows="true"
+            app:title="Diet end">
+
+                <EditTextPreference
+                    android:inputType="number"
+                    app:iconSpaceReserved="false"
+                    app:key="calendar_diet_end_year"
+                    app:title="@string/calendar_end_year_caption"
+                    app:useSimpleSummaryProvider="true" />
+
+                <EditTextPreference
+                    android:inputType="number"
+                    app:key="calendar_diet_end_month"
+                    app:iconSpaceReserved="false"
+                    app:title="@string/calendar_end_month_caption"
+                    app:useSimpleSummaryProvider="true" />
+
+                <EditTextPreference
+                    android:inputType="number"
+                    app:key="calendar_diet_end_day"
+                    app:iconSpaceReserved="false"
+                    app:title="@string/calendar_end_day_caption"
+                    app:useSimpleSummaryProvider="true" />
+        </PreferenceCategory>
+
+        <PreferenceCategory
+            app:key="rate_category"
+            android:fitsSystemWindows="true"
+            app:iconSpaceReserved="false"
+            app:title="Diet change rate">
+
+                <EditTextPreference
+                    android:inputType="numberDecimal"
+                    app:iconSpaceReserved="false"
+                    app:key="min_change_rate"
+                    app:title="@string/min_change_caption"
+                    app:useSimpleSummaryProvider="true" />
+
+                <EditTextPreference
+                    android:inputType="numberDecimal"
+                    app:iconSpaceReserved="false"
+                    app:key="max_change_rate"
+                    app:title="@string/max_change_caption"
+                    app:useSimpleSummaryProvider="true" />
+        </PreferenceCategory>
 </PreferenceScreen>
 

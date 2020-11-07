@@ -35,7 +35,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static android.graphics.Color.rgb;
-import static java.time.temporal.ChronoUnit.DAYS;
 
 
 public class DashboardFragment extends Fragment {
@@ -94,11 +93,13 @@ public class DashboardFragment extends Fragment {
         };
 
         XAxis x = chart.getXAxis();
-
-        x.setAxisMinimum(DateConverters.dateToFloat(startDate));
-        x.setAxisMaximum(DateConverters.dateToFloat(endDate));
-
-
+        /**
+         * TODO:
+         * - Set minimum X for the minimum date of the series
+         * - Pan the graph to start of the diet
+         */
+        //x.setAxisMinimum(DateConverters.dateToFloat(startDate));
+        //x.setAxisMaximum(DateConverters.dateToFloat(endDate));
 
         x.setGranularity(1f); // minimum axis-step (interval) is 1
         x.setLabelCount(8);
@@ -114,7 +115,7 @@ public class DashboardFragment extends Fragment {
         YAxis y2 = chart.getAxisRight();
         y2.setEnabled(false);
 
-        chart.setTouchEnabled(true);
+        //chart.setTouchEnabled(true);
         chart.setDragEnabled(true);
         chart.setScaleEnabled(true);
 
@@ -128,46 +129,10 @@ public class DashboardFragment extends Fragment {
         chart.getLegend().setTextColor(mPrimaryColor);
 
         chart.resetZoom();
-        //chart.zoom(0.9f, 1, 0, mStartWeight);
+        chart.zoom(1.2f, 1f, 0, 0);
+        chart.moveViewToX(DateConverters.dateToFloat(startDate));
 
         chart.invalidate(); // refresh
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private ArrayList<Entry> createLine(OffsetDateTime startDate, OffsetDateTime endDate, float startWeight, float weekRate) {
-        float changeRate = 1 - ((weekRate / 100) / 7);
-        ArrayList<Entry> rateList = new ArrayList<>();
-
-        long totalDays = DAYS.between(startDate, endDate);
-
-        float currWeight = startWeight;
-        OffsetDateTime currDate = startDate;
-
-        for(long i = 0; i <totalDays; ++i) {
-            Entry entry = new Entry(DateConverters.dateToFloat(currDate), currWeight);
-            rateList.add(entry);
-            currDate = currDate.plusDays(1);
-            currWeight = currWeight * changeRate;
-        }
-
-        return rateList;
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.O)
-    private ArrayList<Entry> createTendency(List<Entry> data, int days) {
-        ArrayList<Entry> tendency = new ArrayList<>();
-        for(int i=0; i<data.size(); i++) {
-            float avg = 0;
-            float c = 0;
-            for(int j=i;(j>=0) && (j>=(i-days)); j--) {
-                avg = avg + data.get(j).getY();
-                c = c + 1f;
-            }
-            avg = avg / c;
-            Entry entry = new Entry(data.get(i).getX(), avg);
-            tendency.add(entry);
-        }
-        return tendency;
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -219,7 +184,11 @@ public class DashboardFragment extends Fragment {
                         mStartWeight = startWeights.get(0).getWeight();
                     }
 
-                    List<Entry> maxRateList = createLine(startDate, endDate, mStartWeight, maxWeekRate);
+                    /**
+                     * TODO: only display lines if its on
+                     */
+
+                    List<Entry> maxRateList = dashboardViewModel.createLine(startDate, endDate, mStartWeight, maxWeekRate);
                     LineDataSet maxWeightDataSet = new LineDataSet(maxRateList, "Max change"); // add entries to dataset
                     maxWeightDataSet.setColor(rgb(0, 255, 0));
                     maxWeightDataSet.setValueTextColor(rgb(0, 255, 0)); // styling, ...
@@ -230,7 +199,7 @@ public class DashboardFragment extends Fragment {
 
                     //---
 
-                    List<Entry> minRateList = createLine(startDate, endDate, mStartWeight, minWeekRate);
+                    List<Entry> minRateList = dashboardViewModel.createLine(startDate, endDate, mStartWeight, minWeekRate);
                     LineDataSet minWeightDataSet = new LineDataSet(minRateList, "Min change"); // add entries to dataset
                     minWeightDataSet.setColor(rgb(255, 0, 0));
                     minWeightDataSet.setValueTextColor(rgb(255, 0, 0)); // styling, ...
@@ -241,10 +210,10 @@ public class DashboardFragment extends Fragment {
 
                     //----
 
-                    List<Entry> tendencyList = createTendency(dashboardViewModel.getWeightList(), 7);
+                    List<Entry> tendencyList = dashboardViewModel.createTendency(dashboardViewModel.getWeightList(), 7);
                     LineDataSet tendencyDataSet = new LineDataSet(tendencyList, "Tendency"); // add entries to dataset
-                    tendencyDataSet.setColor(rgb(253, 106, 2));
-                    tendencyDataSet.setValueTextColor(rgb(253, 106, 2)); // styling, ...
+                    tendencyDataSet.setColor(rgb(255, 195, 20));
+                    tendencyDataSet.setValueTextColor(rgb(255, 195, 20)); // styling, ...
                     tendencyDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
                     tendencyDataSet.setDrawCircles(false);
                     tendencyDataSet.setLineWidth(2f);
