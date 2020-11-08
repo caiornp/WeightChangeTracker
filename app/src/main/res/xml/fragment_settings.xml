@@ -10,17 +10,17 @@
                 <SwitchPreferenceCompat
                     app:key="switch_max_rate"
                     app:iconSpaceReserved="false"
-                    app:defaultValue="true"
+                    app:defaultValue="false"
                     app:title="Max change rate" />
                 <SwitchPreferenceCompat
                     app:key="switch_min_rate"
                     app:iconSpaceReserved="false"
-                    app:defaultValue="true"
+                    app:defaultValue="false"
                     app:title="Min change rate" />
                 <SwitchPreferenceCompat
                     app:key="switch_tendency"
                     app:iconSpaceReserved="false"
-                    app:defaultValue="true"
+                    app:defaultValue="false"
                     app:title="Tendency line" />
         </PreferenceCategory>
 

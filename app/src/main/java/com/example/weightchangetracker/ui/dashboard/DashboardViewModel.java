@@ -41,7 +41,12 @@ public class DashboardViewModel extends AndroidViewModel implements Observable {
     private final OffsetDateTime mDietEndDate;
     private final OffsetDateTime mDietStartDate;
 
+    private final boolean mShowMaxLine;
+    private final boolean mShowMinLine;
+    private final boolean mShowTendencyLine;
+
     private final PropertyChangeRegistry callbacks = new PropertyChangeRegistry();
+
     private float mStartWeight;
     private ArrayList<Entry> mWeightList;
 
@@ -90,6 +95,10 @@ public class DashboardViewModel extends AndroidViewModel implements Observable {
                 mDietStartYear,
                 mDietStartMonth,
                 mDietStartDay);
+
+        mShowMaxLine = sharedPreferences.getBoolean("switch_max_rate", false);
+        mShowMinLine = sharedPreferences.getBoolean("switch_min_rate", false);
+        mShowTendencyLine = sharedPreferences.getBoolean("switch_tendency", false);
 
         calculateStartWeight();
 
@@ -186,6 +195,21 @@ public class DashboardViewModel extends AndroidViewModel implements Observable {
     @Bindable
     float getMinWeekRate() {
         return minWeekRate;
+    }
+
+    @Bindable
+    boolean getShowMaxLine() {
+        return mShowMaxLine;
+    }
+
+    @Bindable
+    boolean getShowMinLine() {
+        return mShowMinLine;
+    }
+
+    @Bindable
+    boolean getShowTendencyLine() {
+        return mShowTendencyLine;
     }
 
     //-----------------

@@ -84,11 +84,6 @@ public class DashboardFragment extends Fragment {
 
         XAxis x = chart.getXAxis();
 
-        // TODO: Set minimum X for the minimum date of the series
-        // TODO: Pan the graph to start of the diet
-        //x.setAxisMinimum(DateConverters.dateToFloat(startDate));
-        //x.setAxisMaximum(DateConverters.dateToFloat(endDate));
-
         x.setGranularity(1f); // minimum axis-step (interval) is 1
         x.setLabelCount(8);
         x.setValueFormatter(formatter);
@@ -136,9 +131,8 @@ public class DashboardFragment extends Fragment {
         dataSets.add(mMainDataSet);
 
         if (dashboardViewModel.allDietPreferencesSet()) {
-             // TODO: only display lines if its on
              // Create and draw max line if it is on
-            if(true) {
+            if(dashboardViewModel.getShowMaxLine()) {
                 LineDataSet maxWeightDataSet = new LineDataSet(dashboardViewModel.getMaxRateLine(), "Max change"); // add entries to dataset
                 maxWeightDataSet.setColor(rgb(0, 255, 0));
                 maxWeightDataSet.setValueTextColor(rgb(0, 255, 0)); // styling, ...
@@ -151,7 +145,7 @@ public class DashboardFragment extends Fragment {
 
             //---
             // Create and draw min line if it is on
-            if(true) {
+            if(dashboardViewModel.getShowMinLine()) {
                 LineDataSet minWeightDataSet = new LineDataSet(dashboardViewModel.getMinRateLine(), "Min change"); // add entries to dataset
                 minWeightDataSet.setColor(rgb(255, 0, 0));
                 minWeightDataSet.setValueTextColor(rgb(255, 0, 0)); // styling, ...
@@ -164,7 +158,7 @@ public class DashboardFragment extends Fragment {
 
             //----
             // Create and draw tendency line if it is on
-            if(true) {
+            if(dashboardViewModel.getShowTendencyLine()) {
                 LineDataSet tendencyDataSet = new LineDataSet(dashboardViewModel.getTendencyLine(dashboardViewModel.getWeightList(), 7), "Tendency"); // add entries to dataset
                 tendencyDataSet.setColor(rgb(255, 195, 20));
                 tendencyDataSet.setValueTextColor(rgb(255, 195, 20)); // styling, ...
