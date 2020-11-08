@@ -105,7 +105,7 @@ public class DashboardFragment extends Fragment {
         chart.getAxisRight().setEnabled(false);
 
         Description description = new Description();
-        description.setText("Weight change and tendency");
+        description.setText(getResources().getString(R.string.chart_title));
 
         chart.setDescription(description);
 
@@ -121,7 +121,8 @@ public class DashboardFragment extends Fragment {
     @RequiresApi(api = Build.VERSION_CODES.O)
     void updateGraph() {
         // Create and draw mainline
-        LineDataSet mMainDataSet = new LineDataSet(dashboardViewModel.getWeightList(), "Real Weight"); // add entries to dataset
+        LineDataSet mMainDataSet = new LineDataSet(dashboardViewModel.getWeightList(),
+                getResources().getString(R.string.main_line_title)); // add entries to dataset
         mMainDataSet.setColor(rgb(0, 0, 255));
         mMainDataSet.setValueTextColor(rgb(0, 0, 255)); // styling, ...
         mMainDataSet.setCircleColor(rgb(0, 0, 255));
@@ -133,7 +134,8 @@ public class DashboardFragment extends Fragment {
         if (dashboardViewModel.allDietPreferencesSet()) {
              // Create and draw max line if it is on
             if(dashboardViewModel.getShowMaxLine()) {
-                LineDataSet maxWeightDataSet = new LineDataSet(dashboardViewModel.getMaxRateLine(), "Max change"); // add entries to dataset
+                LineDataSet maxWeightDataSet = new LineDataSet(dashboardViewModel.getMaxRateLine(),
+                        getResources().getString(R.string.max_line_title)); // add entries to dataset
                 maxWeightDataSet.setColor(rgb(0, 255, 0));
                 maxWeightDataSet.setValueTextColor(rgb(0, 255, 0)); // styling, ...
                 maxWeightDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -146,7 +148,8 @@ public class DashboardFragment extends Fragment {
             //---
             // Create and draw min line if it is on
             if(dashboardViewModel.getShowMinLine()) {
-                LineDataSet minWeightDataSet = new LineDataSet(dashboardViewModel.getMinRateLine(), "Min change"); // add entries to dataset
+                LineDataSet minWeightDataSet = new LineDataSet(dashboardViewModel.getMinRateLine(),
+                        getResources().getString(R.string.min_line_title)); // add entries to dataset
                 minWeightDataSet.setColor(rgb(255, 0, 0));
                 minWeightDataSet.setValueTextColor(rgb(255, 0, 0)); // styling, ...
                 minWeightDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);
@@ -159,7 +162,9 @@ public class DashboardFragment extends Fragment {
             //----
             // Create and draw tendency line if it is on
             if(dashboardViewModel.getShowTendencyLine()) {
-                LineDataSet tendencyDataSet = new LineDataSet(dashboardViewModel.getTendencyLine(dashboardViewModel.getWeightList(), 7), "Tendency"); // add entries to dataset
+                LineDataSet tendencyDataSet = new LineDataSet(
+                        dashboardViewModel.getTendencyLine(dashboardViewModel.getWeightList(), 7),
+                        getResources().getString(R.string.tendency_line_title)); // add entries to dataset
                 tendencyDataSet.setColor(rgb(255, 195, 20));
                 tendencyDataSet.setValueTextColor(rgb(255, 195, 20)); // styling, ...
                 tendencyDataSet.setAxisDependency(YAxis.AxisDependency.LEFT);

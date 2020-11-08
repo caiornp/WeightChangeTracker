@@ -28,5 +28,11 @@
     <string name="max_change_caption">Max weekly rate (%)</string>
     <string name="include_Weight_text">Include weight</string>
 
+    <string name="chart_title">Weight history</string>
+    <string name="main_line_title">Weight</string>
+    <string name="max_line_title">Max</string>
+    <string name="min_line_title">Min</string>
+    <string name="tendency_line_title">Average</string>
+
 
 </resources>
