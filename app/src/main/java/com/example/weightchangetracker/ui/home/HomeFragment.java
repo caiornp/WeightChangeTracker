@@ -1,6 +1,7 @@
 package com.example.weightchangetracker.ui.home;
 
 import android.content.Intent;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
@@ -51,6 +52,12 @@ public class HomeFragment extends Fragment {
         mRecyclerView = root.findViewById(R.id.recyclerview);
         mRecyclerView.setAdapter(mWeighListAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
+
+        Resources resources = getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            mRecyclerView.setPadding(0, 0, 0, resources.getDimensionPixelSize(resourceId));
+        }
 
         enableSwipeToDeleteAndUndo();
 

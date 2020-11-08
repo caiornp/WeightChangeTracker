@@ -1,5 +1,6 @@
 package com.example.weightchangetracker.ui.settings;
 
+import android.content.res.Resources;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.View;
@@ -18,14 +19,17 @@ public class SettingsFragment extends PreferenceFragmentCompat {
         super.onViewCreated(view, savedInstanceState);
 
         final RecyclerView rv = getListView(); // This holds the PreferenceScreen's items
-        rv.setPadding(0, 0, 0, 250); // (left, top, right, bottom)
+        Resources resources = getResources();
+        int resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android");
+        if (resourceId > 0) {
+            rv.setPadding(0, 0, 0, resources.getDimensionPixelSize(resourceId));
+        }
     }
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         setPreferencesFromResource(R.xml.fragment_settings, rootKey);
-
-        /**
+        /*
          * TODO:
          * - default values for the diet plan
          * - show additional fields if lines are on
